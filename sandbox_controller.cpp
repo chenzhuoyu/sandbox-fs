@@ -120,6 +120,7 @@ static inline const std::string &validate(const std::string &s) {
 
 void SandboxController::execute_LOAD(const std::string &file) {
     auto ret  = nextToken();
+    auto ldr  = FileBackend(file);
     auto iter = tokens->insert(file, ret);
 
     /* check for insertion */
@@ -130,7 +131,7 @@ void SandboxController::execute_LOAD(const std::string &file) {
     /* load the file */
     files->insert(ret, FileRecord {
         .name = file,
-        .node = FileNode::build(FileBackend(file)),
+        .node = FileNode::build(ldr),
     });
 
     /* reply the file token */
