@@ -65,7 +65,7 @@ SandboxFileSystem::~SandboxFileSystem() {
 }
 
 SandboxFileSystem::SandboxFileSystem(FileNode::Node root, ControlInterface *iface) : _ctrl(iface) {
-    _root = std::move(root);
+    _root.swap(root);
     XLOG(INFO, "Sandbox initialized successfully.");
 }
 
