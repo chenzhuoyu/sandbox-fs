@@ -24,10 +24,7 @@ class ByteBuffer {
         Storage(const Storage &) = delete;
 
     public:
-        explicit Storage(Storage *src) noexcept : Storage() {
-            len = src->len;
-            cap = src->len;
-            mem = static_cast<char *>(malloc(cap));
+        explicit Storage(Storage *src) noexcept : ref(1), mem(static_cast<char *>(malloc(src->len))), cap(src->len), len(src->len) {
             memcpy(mem, src->mem, len);
             release(src);
         }
@@ -118,8 +115,8 @@ public:
 
 public:
     [[nodiscard]] ByteBuffer clone() const noexcept {
-        auto wbuf = _buf.wlock();
-        return *wbuf == nullptr ? ByteBuffer() : ByteBuffer((*wbuf)->retain());
+        auto rbuf = _buf.rlock();
+        return *rbuf == nullptr ? ByteBuffer() : ByteBuffer((*rbuf)->retain());
     }
 
 public:
